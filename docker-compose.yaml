@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  api:
+    image: glazee/movieapi:latest
+    container_name: api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - postgres
+      - redis-cache
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=glaze
+      - POSTGRES_PASSWORD=dalmatian
+      - POSTGRES_DB=movie
+    restart: always
+
+  redis-cache:
+    image: redis:7.0-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    restart: always

@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: dev
+  config:
+    location: classpath:/resources/config/

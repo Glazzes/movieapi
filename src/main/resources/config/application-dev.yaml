@@ -1,0 +1,14 @@
+spring:
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/movies
+    username: glaze
+    password: dalmatianbna
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
