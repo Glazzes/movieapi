@@ -20,9 +20,15 @@ java {
 pmd {
 	isConsoleOutput = true
 	rulesMinimumPriority.set(5)
+	sourceSets = listOf(
+		project.sourceSets.main.get(),
+		project.sourceSets.test.get()
+	)
+	ruleSets = listOf()
 	ruleSetFiles = files(
 		"$projectDir/config/pmd/best-practices.xml",
-		"$projectDir/config/pmd/performance.xml"
+		"$projectDir/config/pmd/performance.xml",
+		"$projectDir/config/pmd/error_prone.xml"
 	)
 }
 
