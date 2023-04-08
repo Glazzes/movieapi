@@ -1,6 +1,5 @@
 package com.glaze.movieapi.entities;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
     @UniqueConstraint(name = "unique_email", columnNames = "email")
 })
 @NoArgsConstructor
-public class Actor implements Serializable {
+public class Actor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

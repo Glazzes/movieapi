@@ -1,6 +1,5 @@
 package com.glaze.movieapi.entities;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie implements Serializable {
+public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
