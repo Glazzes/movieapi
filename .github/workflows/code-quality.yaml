@@ -20,7 +20,7 @@ jobs:
           java-version: 17
 
       - name: Run checkstyle checks
-        run: ./gradlew checkstyleMain ./gradlew checkstyleTest
+        run: ./gradlew checkstyleMain checkstyleTest
 
       - name: Run pmd checks
         run: ./gradlew pmdMain pmdTest
