@@ -16,6 +16,6 @@ public class HelloController {
 
     @GetMapping("/")
     public String hello(@RequestHeader(name = "Accept-Language", defaultValue = "us") Locale language) {
-        return movieService.getAll();
+        return "Hello world";
     }
 }

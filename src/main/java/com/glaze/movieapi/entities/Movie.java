@@ -32,10 +32,16 @@ public class Movie {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    private String title;
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "genre", nullable = false)
+    private String genre;
+
+    @Column(name = "votes", nullable = false)
+    private Long votes;
 
     @Column(name = "rating")
     private Double rating;

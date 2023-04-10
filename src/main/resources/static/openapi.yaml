@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: Movie API
+  version: '0.0.1-SNAPSHOT'
+  description: |
+    A simple api where I intend to learn "non code specific" related practices, such as documenting, caching, testing and CI/CD concepts with Github actions.
+  
+servers: 
+  - url: http://localhost:8080/
+    description: My spring boot application!
+
+tags:
+  - name: Movie
+    description: Everything about movies only!
+  - name: Actors
+    description: Eveything about actors!
+    
+paths:
+  /api/v1/movie:
+    post:
+      tags:
+        - Movie
+      summary: Creates a new movie
+      description: Creates a new movie
+      requestBody:
+        required: true
+        description: Movie request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMovieRequest'
+      responses:
+        201:
+          description: Movie created successfully
+          content:
+            application/json: {}
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/movie/{id}:
+    get:
+      tags:
+        - Movie
+      summary: Find a movie by id
+      description: Find a movie if this one exists otherwhise will return a ProblemDetail instead
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          content: 
+            application/json: {}
+      responses: 
+        200:
+          description: 'Found movie successfully'
+          content:
+            application/json: {}
+        404:
+          $ref: '#/components/responses/NotFound'
+
+    delete: 
+      tags: 
+        - Movie
+      summary: 'Delete a movie by id'
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          content: 
+            application/json: {}
+      responses: 
+        204:
+          description: Movie deleted successfully
+          content:
+            application/json: {}
+        404:
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: 
+            $ref: '#/components/schemas/Problem'
+              
+
+  schemas:
+    Problem:
+      type: object
+      properties:
+        about: 
+          type: string
+          example: 'about:blank'
+        title:
+          type: string
+          example: Resource with id 2047 was not found
+        status: 
+          type: number
+          example: 404
+        instance:
+          type: string
+          example: /api/v1/resource/2047
+
+    CreateMovieRequest:
+      type: object
+      required:
+        - title
+        - description
+        - genre
+        - releaseDate
+      properties:
+        title: 
+          type: string
+          maxLength: 100
+          minLength: 10
+        description:
+          type: string
+          maxLength: 1800
+          minLength: 50
+        genre:
+          type: string
+          example: Sci-fi
+        releaseDate:
+          type: string
+          format: date
+          example: 1983-03-16

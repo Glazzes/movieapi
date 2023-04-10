@@ -2,8 +2,10 @@ package com.glaze.movieapi.service;
 
 import java.util.Optional;
 
+import com.glaze.movieapi.dto.out.MovieResponse;
 import com.glaze.movieapi.entities.Movie;
 import com.glaze.movieapi.exceptions.NotFoundException;
+import com.glaze.movieapi.mappers.MovieMapper;
 import com.glaze.movieapi.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,11 +25,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MovieServiceTest {
 
     private MovieService underTest;
-    @Mock MovieRepository movieRepository;
+    @Mock private MovieRepository movieRepository;
+    @Mock private MovieMapper movieMapper;
 
     @BeforeEach
     void setUp() {
-        underTest = new MovieService(movieRepository);
+        underTest = new MovieService(movieRepository, movieMapper);
     }
 
     @Test
@@ -38,18 +41,19 @@ class MovieServiceTest {
 
         // When
         Movie movie = Movie.builder()
-                .id(1L)
-                .name("Terminator 2")
+                .id(movieId)
+                .title("Terminator 2")
                 .description("Machines want to kill us all D:")
+                .genre("Sci-fi")
                 .rating(4.5d)
                 .build();
 
         Optional<Movie> optional = Optional.ofNullable(movie);
         when(movieRepository.findById(movieId)).thenReturn(optional);
-        underTest.findById(movieId);
+        MovieResponse result = underTest.findById(movieId);
 
         //Then
-        assertThat(optional).contains(movie);
+        assertThat(result.id()).isEqualTo(movieId);
         verify(movieRepository).findById(movieId);
     }
 
@@ -93,7 +97,8 @@ class MovieServiceTest {
         when(movieRepository.existsById(id)).thenReturn(false);
 
         // Then
-        assertThatThrownBy(() -> underTest.deleteById(id));
+        assertThatThrownBy(() -> underTest.deleteById(id))
+            .isInstanceOf(NotFoundException.class);
         verify(movieRepository, never()).deleteById(id);
     }
 }
