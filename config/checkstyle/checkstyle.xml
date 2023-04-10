@@ -41,7 +41,6 @@
         <module name="IllegalType" />
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
-        <module name="MultipleStringLiterals"/>
         <module name="NestedIfDepth"/>
         <module name="NestedTryDepth"/>
         <module name="NoArrayTrailingComma"/>
