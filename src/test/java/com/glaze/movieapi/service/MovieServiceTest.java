@@ -42,19 +42,21 @@ class MovieServiceTest {
         // When
         Movie movie = Movie.builder()
                 .id(movieId)
-                .title("Terminator 2")
-                .description("Machines want to kill us all D:")
-                .genre("Sci-fi")
-                .rating(4.5d)
                 .build();
+
+        MovieResponse movieResponse = MovieResponse.builder()
+            .id(movieId)
+            .build();
 
         Optional<Movie> optional = Optional.ofNullable(movie);
         when(movieRepository.findById(movieId)).thenReturn(optional);
+        when(movieMapper.mapMovieToMovieResponse(movie)).thenReturn(movieResponse);
         MovieResponse result = underTest.findById(movieId);
 
         //Then
-        assertThat(result.id()).isEqualTo(movieId);
+        assertThat(result).isEqualTo(movieResponse);
         verify(movieRepository).findById(movieId);
+        verify(movieMapper).mapMovieToMovieResponse(movie);
     }
 
     @Test

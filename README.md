@@ -1,6 +1,5 @@
 ## Movie API
-[![QA](https://github.com/Glazzes/movieapi/actions/workflows/code-quality.yaml/badge.svg)](https://github.com/Glazzes/movieapi/actions/workflows/code-quality.yaml)
-[![Test](https://github.com/Glazzes/movieapi/actions/workflows/test.yaml/badge.svg)](https://github.com/Glazzes/movieapi/actions/workflows/code-quality.yaml)
+[![CI](https://github.com/Glazzes/movieapi/actions/workflows/pipeline.yaml/badge.svg)](https://github.com/Glazzes/movieapi/actions/workflows/pipeline.yaml)
 
 ### Goals
 This is a simple api where I intend to practice many
