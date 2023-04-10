@@ -1,12 +1,13 @@
 package com.glaze.movieapi.service;
 
+import jakarta.transaction.Transactional;
+
 import com.glaze.movieapi.dto.out.MovieResponse;
 import com.glaze.movieapi.dto.in.CreateMovieRequest;
 import com.glaze.movieapi.entities.Movie;
 import com.glaze.movieapi.exceptions.NotFoundException;
 import com.glaze.movieapi.mappers.MovieMapper;
 import com.glaze.movieapi.repository.MovieRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;

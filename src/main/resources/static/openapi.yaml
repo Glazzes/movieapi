@@ -4,16 +4,12 @@ info:
   version: '0.0.1-SNAPSHOT'
   description: |
     A simple api where I intend to learn "non code specific" related practices, such as documenting, caching, testing and CI/CD concepts with Github actions.
-  
-servers: 
-  - url: http://localhost:8080/
-    description: My spring boot application!
 
 tags:
   - name: Movie
     description: Everything about movies only!
   - name: Actors
-    description: Eveything about actors!
+    description: Everything about actors!
     
 paths:
   /api/v1/movie:
@@ -42,14 +38,14 @@ paths:
       tags:
         - Movie
       summary: Find a movie by id
-      description: Find a movie if this one exists otherwhise will return a ProblemDetail instead
+      description: Find a movie if this one exists other whise will return a ProblemDetail instead
       parameters: 
         - name: id
           in: path
           required: true
           content: 
             application/json: {}
-      responses: 
+      responses:
         200:
           description: 'Found movie successfully'
           content:
