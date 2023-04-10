@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  cancel-previous:
+    runs-on: ubuntu-22.04
+    steps:
+        - name: Cancel previous run
+          uses: styfle/cancel-workflow-action
+          with:
+            access_token: ${{ github.token }}
+
+  QA:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Run quality checks
+        run: ./gradlew checkstyleMain checkstyleTest pmdMain pmdTest
+
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Run tests
+        run: ./gradlew test
+
+  pusblish:
+    needs:
+      - QA
+      - test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+      - name: Push to docker hub
+        run: |
+          ./gradlew jib \
+          -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
+          -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
+          -Djib.to.image=https://registry.hub.docker.com/glazee/movieapi
