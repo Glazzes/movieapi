@@ -1,0 +1,6 @@
+[versions]
+map = "1.5.3.Final"
+
+[libraries]
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "map" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "map" }
