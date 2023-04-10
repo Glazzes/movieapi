@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew test
 
   pusblish:
-    if: github.event_name == push && github.ref == refs/heads/main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - QA
       - test
