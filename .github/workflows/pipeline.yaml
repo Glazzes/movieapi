@@ -49,8 +49,11 @@ jobs:
           distribution: 'corretto'
           java-version: 17
       - name: Push to docker hub
+        env:
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           ./gradlew jib \
-          -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} \
-          -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} \
+          -Djib.to.auth.username=USERNAME \
+          -Djib.to.auth.password=PASSWORD
           -Djib.to.image=https://registry.hub.docker.com/glazee/movieapi
