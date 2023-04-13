@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/actor")
+@RequestMapping("/api/v1/actors")
 @RequiredArgsConstructor
 @Tag(name = "Actor", description = "All actions that are only applicable to actors")
 public class ActorController {
