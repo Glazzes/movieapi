@@ -1,6 +1,7 @@
 package com.glaze.movieapi.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import com.glaze.movieapi.dto.in.CreateActorRequest;
@@ -15,6 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,6 +33,28 @@ class ActorServiceTest {
     @InjectMocks private ActorService underTest;
     @Mock private ActorRepository actorRepository;
     @Mock private ActorMapper actorMapper;
+
+    @Test
+    @DisplayName("Given a request returns appropriate page")
+    void testFindAllActors() {
+        // Given
+        PageRequest pageRequest = PageRequest.of(0, 1);
+
+        // When
+        Actor actor = Actor.builder()
+            .id(1L)
+            .name("Adam Scott")
+            .build();
+        Page<Actor> page = new PageImpl<>(List.of(actor), pageRequest, 1);
+        when(actorRepository.findAll(pageRequest))
+            .thenReturn(page);
+
+        Page<ActorResponse> response = underTest.findAll(pageRequest);
+
+        // Then
+        assertThat(response.isLast()).isTrue();
+        assertThat(response.getTotalPages()).isEqualTo(1);
+    }
 
     @Test
     @DisplayName("Given a request when save should succeed")
