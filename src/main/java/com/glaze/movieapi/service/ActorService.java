@@ -9,12 +9,16 @@ import com.glaze.movieapi.exceptions.NotFoundException;
 import com.glaze.movieapi.mappers.ActorMapper;
 import com.glaze.movieapi.repository.ActorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ActorService {
+
+    private static final String NOT_FOUND_MESSAGE_KEY = "actor.not-found";
 
     private final ActorRepository actorRepository;
     private final ActorMapper mapper;
@@ -25,16 +29,21 @@ public class ActorService {
         return savedActor.getId();
     }
 
+    public Page<ActorResponse> findAll(PageRequest pageRequest) {
+        return actorRepository.findAll(pageRequest)
+            .map(mapper::mapActorToActorResponse);
+    }
+
     public ActorResponse findById(Long id) {
         return actorRepository.findById(id)
             .map(mapper::mapActorToActorResponse)
-            .orElseThrow(() -> new NotFoundException("", id));
+            .orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE_KEY, id));
     }
 
     public void deleteById(Long id) {
         boolean exists = actorRepository.existsById(id);
         if(!exists) {
-            throw new NotFoundException("", id);
+            throw new NotFoundException(NOT_FOUND_MESSAGE_KEY, id);
         }
 
         actorRepository.deleteById(id);
