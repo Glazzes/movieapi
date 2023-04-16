@@ -2,6 +2,7 @@ package com.glaze.movieapi.controller;
 
 import jakarta.validation.Valid;
 
+import com.glaze.movieapi.documentation.movie.CreateMovieAPIDocumentation;
 import com.glaze.movieapi.dto.out.MovieResponse;
 import com.glaze.movieapi.dto.in.CreateMovieRequest;
 import com.glaze.movieapi.service.MovieService;
@@ -24,6 +25,7 @@ public class MovieController {
     private final MovieService movieService;
 
     @PostMapping
+    @CreateMovieAPIDocumentation
     public ResponseEntity<Long> save(@RequestBody @Valid CreateMovieRequest createMovieRequest) {
         Long movieId = movieService.save(createMovieRequest);
         return ResponseEntity.status(HttpStatus.CREATED)

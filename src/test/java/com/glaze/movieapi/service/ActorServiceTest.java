@@ -10,6 +10,7 @@ import com.glaze.movieapi.entities.Actor;
 import com.glaze.movieapi.exceptions.NotFoundException;
 import com.glaze.movieapi.mappers.ActorMapper;
 import com.glaze.movieapi.repository.ActorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -36,6 +38,17 @@ class ActorServiceTest {
     @InjectMocks private ActorService underTest;
     @Mock private ActorRepository actorRepository;
     @Mock private ActorMapper actorMapper;
+
+    private CreateActorRequest request;
+
+    @BeforeEach
+    void setUp() {
+        request = new CreateActorRequest(
+            "Ryan Gosling",
+            "Ryan Thomas Gosling is a canadian actor and musician",
+            LocalDate.of(1980, 11, 12)
+        );
+    }
 
     @Test
     @DisplayName("Given a request returns appropriate page")
@@ -61,19 +74,13 @@ class ActorServiceTest {
 
     @Test
     @DisplayName("Given a request when save should succeed")
-    void givenARequestWhenSaveShouldSucceed() {
+    void testSaveSuccess() {
         // Given
-        CreateActorRequest request = new CreateActorRequest(
-            "Ryan Gosling",
-            "Ryan Thomas Gosling is a canadian actor and musician",
-            LocalDate.of(1980, 11, 12)
-        );
-
         Actor actor = Actor.builder()
                 .id(1L)
-                .name("Ryan Gosling")
-                .summary("Ryan Thomas Gosling is a canadian actor and musician")
-                .birthDate(LocalDate.of(1980, 11, 12))
+                .name(request.name())
+                .summary(request.summary())
+                .birthDate(request.birthDate())
                 .build();
 
         // When
@@ -85,13 +92,11 @@ class ActorServiceTest {
 
         // Then
         assertThat(savedId).isEqualTo(1L);
-        verify(actorMapper).mapCreateActorRequestToActor(request);
-        verify(actorRepository).save(actor);
     }
 
     @Test
     @DisplayName("Given an existing id when find should return response")
-    void givenAnExistingIdWhenFindShouldReturnResponse() {
+    void testFindByIdReturnResponse() {
         // Given
         Long id = 1L;
 
@@ -110,12 +115,11 @@ class ActorServiceTest {
 
         // Then
         assertThat(actualResponse.id()).isEqualTo(id);
-        verify(actorRepository).findById(id);
     }
 
     @Test
     @DisplayName("Given a non existing id when find should throw")
-    void givenNonExistingIdWhenFindShouldThrow() {
+    void testFindByIdThrowException() {
         // Given
         Long id = 1L;
 
@@ -126,7 +130,6 @@ class ActorServiceTest {
         // Then
         assertThatThrownBy(() -> underTest.findById(id))
             .isInstanceOf(NotFoundException.class);
-        verify(actorRepository).findById(id);
     }
 
     @Test
@@ -134,34 +137,39 @@ class ActorServiceTest {
     void testEditByIdSuccess() {
         // Given
         long id = 1L;
-        CreateActorRequest request = new CreateActorRequest(
-            "Ryan Gosling",
-            "Funny man from deadpool",
-            LocalDate.now()
-        );
 
         // When
         Actor actor = Actor.builder()
-            .id(id)
-            .name("Adam scott")
-            .summary("Protagonist from Severance")
-            .birthDate(LocalDate.of(1980, 11, 12))
+            .id(null)
+            .name(request.name())
+            .summary(request.summary())
+            .birthDate(request.birthDate())
             .build();
         Optional<Actor> optional = Optional.ofNullable(actor);
+
+        ActorResponse response = ActorResponse.builder()
+            .id(id)
+            .name(request.name())
+            .summary(request.name())
+            .birthDate(request.birthDate())
+            .build();
+
         when(actorRepository.findById(id))
             .thenReturn(optional);
+        when(actorRepository.save(actor))
+            .thenReturn(actor);
+        when(actorMapper.mapActorToActorResponse(actor))
+            .thenReturn(response);
 
-        Actor savedActor = Actor.builder()
-            .id(id)
-            .build();
-        when(actorRepository.save(actor)).thenReturn(savedActor);
         underTest.editById(id, request);
 
         // Then
         spy(actor).setName(anyString());
         spy(actor).setSummary(anyString());
         spy(actor).setBirthDate(any(LocalDate.class));
-        verify(actorMapper).mapActorToActorResponse(savedActor);
+        verify(actorRepository).findById(anyLong());
+        verify(actorRepository).save(actor);
+        verify(actorMapper).mapActorToActorResponse(actor);
     }
 
     @Test
@@ -169,11 +177,6 @@ class ActorServiceTest {
     void testEditByIdThrowException() {
         // Given
         long id = 1L;
-        CreateActorRequest request = new CreateActorRequest(
-            "Adam Scott",
-            "Funny man from deadpool",
-            LocalDate.now()
-        );
 
         // When
         when(actorRepository.findById(id))
