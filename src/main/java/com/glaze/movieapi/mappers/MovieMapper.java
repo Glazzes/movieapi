@@ -11,6 +11,7 @@ public interface MovieMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "actors", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "genre", target = "genre")
