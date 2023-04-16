@@ -7,10 +7,10 @@ import com.glaze.movieapi.entities.Movie;
 import com.glaze.movieapi.exceptions.NotFoundException;
 import com.glaze.movieapi.mappers.MovieMapper;
 import com.glaze.movieapi.repository.MovieRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,14 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Movie Service Tests")
 class MovieServiceTest {
 
-    private MovieService underTest;
+    @InjectMocks private MovieService underTest;
     @Mock private MovieRepository movieRepository;
     @Mock private MovieMapper movieMapper;
-
-    @BeforeEach
-    void setUp() {
-        underTest = new MovieService(movieRepository, movieMapper);
-    }
 
     @Test
     @DisplayName("Given an already saved movie should return a DTO")

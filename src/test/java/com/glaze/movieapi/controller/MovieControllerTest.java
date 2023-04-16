@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DisplayName("Movie Controller Integration Tests")
-public class MovieControllerIntegrationTest {
+public class MovieControllerTest {
     private static final String BASE_ENDPOINT = "/api/v1/movie";
     @Autowired private ObjectMapper mapper;
     @Autowired private MockMvc mvc;

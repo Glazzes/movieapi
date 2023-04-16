@@ -52,8 +52,9 @@ jobs:
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          IMAGE: ${{ secrets.DOCKER_IMAGE }}
         run: |
           ./gradlew jib \
           -Djib.to.auth.username = $USERNAME \
           -Djib.to.auth.password = $PASSWORD \
-          -Djib.to.image = glazee/movieapi
+          -Djib.to.image = $IMAGE
