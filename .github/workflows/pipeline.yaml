@@ -22,6 +22,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: 17
+          cache: 'gradle'
       - name: Run quality checks
         run: ./gradlew checkstyleMain checkstyleTest pmdMain pmdTest
 
@@ -33,6 +34,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: 17
+          cache: 'gradle'
       - name: Run tests
         run: ./gradlew test
 
@@ -48,6 +50,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: 17
+          cache: 'gradle'
       - name: Push to docker hub
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -55,6 +58,6 @@ jobs:
           IMAGE: ${{ secrets.DOCKER_IMAGE }}
         run: |
           ./gradlew jib \
-          -Djib.to.auth.username = $USERNAME \
-          -Djib.to.auth.password = $PASSWORD \
-          -Djib.to.image = $IMAGE
+          -Djib.to.auth.username=$USERNAME \
+          -Djib.to.auth.password=$PASSWORD \
+          -Djib.to.image=$IMAGE
