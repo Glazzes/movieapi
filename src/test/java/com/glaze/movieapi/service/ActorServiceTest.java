@@ -22,7 +22,10 @@ import org.springframework.data.domain.PageRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +68,7 @@ class ActorServiceTest {
             "Ryan Thomas Gosling is a canadian actor and musician",
             LocalDate.of(1980, 11, 12)
         );
+
         Actor actor = Actor.builder()
                 .id(1L)
                 .name("Ryan Gosling")
@@ -123,6 +127,64 @@ class ActorServiceTest {
         assertThatThrownBy(() -> underTest.findById(id))
             .isInstanceOf(NotFoundException.class);
         verify(actorRepository).findById(id);
+    }
+
+    @Test
+    @DisplayName("Given an user by id when edit should succeed")
+    void testEditByIdSuccess() {
+        // Given
+        long id = 1L;
+        CreateActorRequest request = new CreateActorRequest(
+            "Ryan Gosling",
+            "Funny man from deadpool",
+            LocalDate.now()
+        );
+
+        // When
+        Actor actor = Actor.builder()
+            .id(id)
+            .name("Adam scott")
+            .summary("Protagonist from Severance")
+            .birthDate(LocalDate.of(1980, 11, 12))
+            .build();
+        Optional<Actor> optional = Optional.ofNullable(actor);
+        when(actorRepository.findById(id))
+            .thenReturn(optional);
+
+        Actor savedActor = Actor.builder()
+            .id(id)
+            .build();
+        when(actorRepository.save(actor)).thenReturn(savedActor);
+        underTest.editById(id, request);
+
+        // Then
+        spy(actor).setName(anyString());
+        spy(actor).setSummary(anyString());
+        spy(actor).setBirthDate(any(LocalDate.class));
+        verify(actorMapper).mapActorToActorResponse(savedActor);
+    }
+
+    @Test
+    @DisplayName("Given a not existing user by id when editing should throw exception")
+    void testEditByIdThrowException() {
+        // Given
+        long id = 1L;
+        CreateActorRequest request = new CreateActorRequest(
+            "Adam Scott",
+            "Funny man from deadpool",
+            LocalDate.now()
+        );
+
+        // When
+        when(actorRepository.findById(id))
+            .thenReturn(Optional.empty());
+
+        // Then
+        assertThatThrownBy(() -> underTest.editById(id, request))
+            .isInstanceOf(NotFoundException.class);
+
+        verify(actorRepository, never()).save(any(Actor.class));
+        verify(actorMapper, never()).mapActorToActorResponse(any(Actor.class));
     }
 
     @Test
