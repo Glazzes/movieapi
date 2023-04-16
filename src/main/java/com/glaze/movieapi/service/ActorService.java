@@ -40,6 +40,18 @@ public class ActorService {
             .orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE_KEY, id));
     }
 
+    public ActorResponse editById(Long id, CreateActorRequest request) {
+        Actor actor = actorRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE_KEY, id));
+
+        actor.setName(request.name());
+        actor.setSummary(request.summary());
+        actor.setBirthDate(request.birthDate());
+
+        Actor editedActor = actorRepository.save(actor);
+        return mapper.mapActorToActorResponse(editedActor);
+    }
+
     public void deleteById(Long id) {
         boolean exists = actorRepository.existsById(id);
         if(!exists) {
