@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,8 +19,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "movies")
 @Data
 @Builder
@@ -46,9 +50,14 @@ public class Movie {
     @Column(name = "rating")
     private Double rating;
 
-    @Column(name = "release_date", nullable = false, updatable = false)
+    @CreatedDate
+    @Column(name = "createAt", nullable = false, updatable = false)
+    private LocalDate createdAt;
+
+    @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "actors_movies",

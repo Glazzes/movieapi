@@ -14,9 +14,9 @@ public record CreateMovieRequest(
     @Size(message = "{movie.description.length}", min=20, max = 1800)
     String description,
 
-    @NotNull
+    @NotBlank(message = "{movie.genre.required}")
     String genre,
 
-    @NotNull
+    @NotNull(message = "{movie.release-date.required}")
     LocalDate releaseDate
 ) {}
