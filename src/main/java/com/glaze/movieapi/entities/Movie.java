@@ -8,6 +8,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToMany;
@@ -65,5 +66,9 @@ public class Movie {
         inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
     private Set<Actor> actors = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
+    private Set<Review> reviews = new HashSet<>();
 
 }
