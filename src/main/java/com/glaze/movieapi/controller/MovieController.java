@@ -2,6 +2,7 @@ package com.glaze.movieapi.controller;
 
 import jakarta.validation.Valid;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.glaze.movieapi.documentation.movie.UpdateMovieAPIDocumentation;
 import com.glaze.movieapi.documentation.movie.FindAllMoviesAPIDocumentation;
 import com.glaze.movieapi.documentation.movie.DeleteMovieAPIDocumentation;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/movie")
 @RequiredArgsConstructor
+@Tag(name = "Movie", description = "All actions applicable to movies only")
 public class MovieController {
 
     private final MovieService movieService;

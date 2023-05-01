@@ -11,6 +11,8 @@ import com.glaze.movieapi.exceptions.NotFoundException;
 import com.glaze.movieapi.repository.MovieRepository;
 import com.glaze.movieapi.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,10 +23,12 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
     private final ReviewMapper reviewMapper;
+    private static final String MOVIE_NOT_FOUND = "movie.not-found";
+    private static final String REVIEW_NOT_FOUND = "review.not-found";
 
-    public Long saveMovieReview(Long movieId, CreateReviewRequest request) {
+    public Long saveReview(Long movieId, CreateReviewRequest request) {
         Movie movie = movieRepository.findById(movieId)
-            .orElseThrow(() -> new NotFoundException("", movieId));
+            .orElseThrow(() -> new NotFoundException(MOVIE_NOT_FOUND, movieId.toString()));
 
         Review review = reviewMapper.mapCreateReviewRequestToReviewEntity(request);
         review.setMovie(movie);
@@ -33,9 +37,17 @@ public class ReviewService {
         return savedReview.getId();
     }
 
+    public Page<ReviewResponse> findAllMovieReviews(Long movieId, Pageable page) {
+        Movie movie = movieRepository.findById(movieId)
+            .orElseThrow(() -> new NotFoundException(MOVIE_NOT_FOUND, movieId.toString()));
+
+        return reviewRepository.findAllByMovie(movie, page)
+            .map(reviewMapper::mapReviewEntityToReviewResponse);
+    }
+
     public ReviewResponse updateReview(Long reviewId, CreateReviewRequest request) {
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(() -> new NotFoundException("", reviewId));
+            .orElseThrow(() -> new NotFoundException(REVIEW_NOT_FOUND, reviewId.toString()));
 
         review.setContent(request.content());
         review.setRating(request.rating());
@@ -47,7 +59,7 @@ public class ReviewService {
     public void deleteMovieReview(Long reviewId) {
         boolean exists = reviewRepository.existsById(reviewId);
         if(!exists) {
-            throw new NotFoundException("", reviewId);
+            throw new NotFoundException(REVIEW_NOT_FOUND, reviewId.toString());
         }
 
         reviewRepository.deleteById(reviewId);
