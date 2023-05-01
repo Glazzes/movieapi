@@ -2,6 +2,7 @@ package com.glaze.movieapi.service;
 
 import jakarta.transaction.Transactional;
 
+import com.glaze.movieapi.dto.out.ReviewResponse;
 import com.glaze.movieapi.entities.Review;
 import com.glaze.movieapi.mappers.ReviewMapper;
 import com.glaze.movieapi.dto.in.CreateReviewRequest;
@@ -30,6 +31,17 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
         return savedReview.getId();
+    }
+
+    public ReviewResponse updateReview(Long reviewId, CreateReviewRequest request) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> new NotFoundException("", reviewId));
+
+        review.setContent(request.content());
+        review.setRating(request.rating());
+
+        Review updatedReview = reviewRepository.save(review);
+        return reviewMapper.mapReviewEntityToReviewResponse(updatedReview);
     }
 
     public void deleteMovieReview(Long reviewId) {
