@@ -31,8 +31,12 @@ public class ReviewService {
             .orElseThrow(() -> new NotFoundException(MOVIE_NOT_FOUND, movieId.toString()));
 
         Review review = reviewMapper.mapCreateReviewRequestToReviewEntity(request);
+
+        Long movieVotes = movie.getVotes();
+        movie.setVotes(movieVotes + 1L);
         review.setMovie(movie);
 
+        movieRepository.save(movie);
         Review savedReview = reviewRepository.save(review);
         return savedReview.getId();
     }
@@ -57,11 +61,13 @@ public class ReviewService {
     }
 
     public void deleteMovieReview(Long reviewId) {
-        boolean exists = reviewRepository.existsById(reviewId);
-        if(!exists) {
-            throw new NotFoundException(REVIEW_NOT_FOUND, reviewId.toString());
-        }
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException(REVIEW_NOT_FOUND, reviewId.toString()));
 
+        Movie movie = review.getMovie();
+        movie.setVotes(movie.getVotes() - 1L);
+
+        movieRepository.save(movie);
         reviewRepository.deleteById(reviewId);
     }
 

@@ -7,6 +7,6 @@ public record ReviewResponse(
     Long movieId,
     String content,
     Double rating,
-    LocalDate reviewAt,
+    LocalDate createdAt,
     LocalDate lastModified
 ){}

@@ -11,7 +11,7 @@ public interface ReviewMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "movie", ignore = true)
-    @Mapping(target = "reviewAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
     @Mapping(source = "content", target = "content")
     @Mapping(source = "rating", target = "rating")
@@ -22,7 +22,7 @@ public interface ReviewMapper {
     @Mapping(source = "rating", target = "rating")
     @Mapping(source = "movie.id", target = "movieId")
     @Mapping(source = "lastModified", target = "lastModified")
-    @Mapping(source = "reviewAt", target = "reviewAt")
+    @Mapping(source = "createdAt", target = "createdAt")
     ReviewResponse mapReviewEntityToReviewResponse(Review review);
 
 }

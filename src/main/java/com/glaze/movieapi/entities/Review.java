@@ -41,8 +41,8 @@ public class Review implements Serializable {
     private Double rating;
 
     @CreatedDate
-    @Column(name = "review_at", nullable = false, updatable = false)
-    private LocalDate reviewAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDate createdAt;
 
     @LastModifiedDate
     @Column(name = "last_modified", nullable = false)
