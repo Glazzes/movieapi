@@ -1,6 +1,7 @@
 package com.glaze.movieapi.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,27 +42,27 @@ public class ReviewServiceTest {
         3.5D
     );
 
-    private final Movie movieEntity = new Movie(
-        1L,
-        "Blade Runner 2047",
-        "Great sequel to the 1983 film",
-        "sci-fi",
-        200L,
-        4.5D,
-        LocalDate.now(),
-        LocalDate.now(),
-        null,
-        null
-    );
+    private final Movie movieEntity = Movie.builder()
+        .id(1L)
+        .title("Blade Runner 2047")
+        .description("Great sequel to the 1983 film")
+        .genre("sci-fi")
+        .votes(200L)
+        .rating(4.5D)
+        .createdAt(LocalDate.now())
+        .releaseDate(LocalDate.now())
+        .actors(Collections.emptySet())
+        .reviews(Collections.emptySet())
+        .build();
 
-    private final Review reviewEntity = new Review(
-        1L,
-        "Awesome movie",
-        4.8D,
-        null,
-        null,
-        null
-    );
+    private final Review reviewEntity = Review.builder()
+        .id(1L)
+        .content("Awesome movie")
+        .rating(4.8D)
+        .createdAt(LocalDate.now())
+        .lastModified(LocalDate.now())
+        .movie(movieEntity)
+        .build();
 
     @Test
     @DisplayName("Save review successful")
@@ -202,10 +203,12 @@ public class ReviewServiceTest {
         Long reviewId = 1L;
 
         // When
-        when(reviewRepository.existsById(reviewId)).thenReturn(true);
+        Optional<Review> reviewOptional = Optional.of(reviewEntity);
+        when(reviewRepository.findById(reviewId)).thenReturn(reviewOptional);
         reviewService.deleteMovieReview(reviewId);
 
         // Then
+        verify(movieRepository).save(movieEntity);
         verify(reviewRepository).deleteById(reviewId);
     }
 
@@ -216,12 +219,14 @@ public class ReviewServiceTest {
         Long reviewId = 1L;
 
         // When
-        when(reviewRepository.existsById(reviewId)).thenReturn(false);
+        Optional<Review> emptyOptional = Optional.empty();
+        when(reviewRepository.findById(reviewId)).thenReturn(emptyOptional);
 
         // Then
         assertThatThrownBy(() -> reviewService.deleteMovieReview(reviewId))
             .isInstanceOf(NotFoundException.class);
 
+        verify(movieRepository, never()).save(any(Movie.class));
         verify(reviewRepository, never()).deleteById(reviewId);
     }
 

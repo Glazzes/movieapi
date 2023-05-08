@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -122,6 +124,52 @@ public class ReviewControllerTest {
     }
 
     @Test
+    @DisplayName("Find movie's reviews successfully")
+    void findMovieReviewsSuccess() throws Exception {
+        String endPoint = "/api/v1/movie/%s/reviews".formatted(this.movieId);
+
+        mvc.perform(
+            get(endPoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "10")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpectAll(
+                jsonPath("$.content", hasSize(1)),
+                jsonPath("$.totalPages", is(1)),
+                jsonPath("$.totalElements", is(1)),
+                jsonPath("$.last", is(true))
+            );
+    }
+
+    @Test
+    @DisplayName("Find movie's reviews when no exists should respond with NOT_FOUND")
+    void findMovieReviewsNotFound() throws Exception {
+        String nonExistingMovieId = "2047";
+        String endpoint = "/api/v1/movie/%s/reviews".formatted(nonExistingMovieId);
+
+        String errorMessage = messageSource.getMessage(
+            "movie.not-found",
+            new Object[]{nonExistingMovieId},
+            Locale.US
+        );
+
+        mvc.perform(
+            get(endpoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "10")
+            )
+            .andExpect(status().isNotFound())
+            .andExpectAll(
+                jsonPath("$.title", is(errorMessage)),
+                jsonPath("$.instance", is(endpoint))
+            );
+    }
+
+    @Test
     @DisplayName("Save review by id respond with NOT_FOUND")
     void saveReviewMovieNotFound() throws Exception {
         String nonExistingMovieId = "2047";
@@ -143,6 +191,70 @@ public class ReviewControllerTest {
                 jsonPath("$.status", is(404)),
                 jsonPath("$.title", is(errorMessage)),
                 jsonPath("$.instance", is(endpoint))
+            );
+    }
+
+    @Test
+    @DisplayName("Update review successfully")
+    void updateReviewSuccess() throws Exception {
+        String endPoint = "/api/v1/review/%s".formatted(this.reviewId);
+        String validContent = objectMapper.writeValueAsString(this.validRequest);
+
+        mvc.perform(
+            patch(endPoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validContent)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpectAll(
+                jsonPath("$.id").value(this.reviewId),
+                jsonPath("$.movieId").value(this.movieId),
+                jsonPath("$.content", is(this.validRequest.content())),
+                jsonPath("$.rating", is(this.validRequest.rating()))
+            );
+    }
+
+    @Test
+    @DisplayName("Update review given invalid data should respond with BAD_REQUEST")
+    void updateReviewWithInvalidData() throws Exception {
+        String endPoint = "/api/v1/review/%s".formatted(this.reviewId);
+        String content = objectMapper.writeValueAsString(this.invalidRequest);
+
+        mvc.perform(
+            patch(endPoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpectAll(
+                jsonPath("$.instance", is(endPoint)),
+                jsonPath("$.errors.*", hasSize(2))
+            );
+    }
+
+    @Test
+    @DisplayName("Update review when not exists should respond with NOT_FOUND")
+    void updateReviewNotFound() throws Exception {
+        String nonExistingReviewId = "2047";
+        String endPoint = "/api/v1/review/%s".formatted(nonExistingReviewId);
+        String content = objectMapper.writeValueAsString(this.validRequest);
+
+        String errorMessage = messageSource.getMessage(
+            "review.not-found",
+            new Object[]{nonExistingReviewId},
+            Locale.US
+        );
+
+        mvc.perform(
+            patch(endPoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+            )
+            .andExpect(status().isNotFound())
+            .andExpectAll(
+                jsonPath("$.title", is(errorMessage)),
+                jsonPath("$.instance", is(endPoint))
             );
     }
 
