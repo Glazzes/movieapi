@@ -8,6 +8,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToMany;
@@ -23,12 +24,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "movies")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Movie {
 
     @Id
@@ -65,5 +66,9 @@ public class Movie {
         inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
     private Set<Actor> actors = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
+    private Set<Review> reviews = new HashSet<>();
 
 }

@@ -9,10 +9,6 @@ public class NotFoundException extends RuntimeException {
 
     private final String messageKey;
     private final Object[] args;
-    public NotFoundException(String messageKey) {
-        this.messageKey = messageKey;
-        this.args = new String[]{};
-    }
 
     public NotFoundException(String messageKey, Object... args) {
         this.messageKey = messageKey;
