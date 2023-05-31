@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -32,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class ReviewControllerTest {
 
@@ -51,9 +49,8 @@ public class ReviewControllerTest {
     void setUpDatabaseRecords() {
         Movie movie = Movie.builder()
             .title("Blade runner 2047")
-            .description("Sequel of the great 1983 film")
+            .synopsis("Sequel of the great 1983 film")
             .releaseDate(LocalDate.now())
-            .genre("sci-fi")
             .votes(0L)
             .rating(0D)
             .build();

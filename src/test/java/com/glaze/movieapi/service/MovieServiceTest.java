@@ -47,7 +47,6 @@ class MovieServiceTest {
         request = new CreateMovieRequest(
             "Blade runner 2047",
             "Best sci-fi movie from 2017",
-            "sci-fi",
             LocalDate.now()
         );
     }
@@ -65,8 +64,7 @@ class MovieServiceTest {
         Movie movie = Movie.builder()
             .id(id)
             .title(request.title())
-            .description(request.description())
-            .genre(request.genre())
+            .synopsis(request.synopsis())
             .releaseDate(request.releaseDate())
             .build();
 
@@ -99,18 +97,16 @@ class MovieServiceTest {
         Movie movie = Movie.builder()
             .id(1L)
             .title("Blade runner 2047")
-            .description("Worthy sequel from the awesome 1982 film")
+            .synopsis("Worthy sequel from the awesome 1982 film")
             .releaseDate(LocalDate.now())
             .rating(4.5D)
-            .genre("sci-fi")
             .votes(1000L)
             .build();
 
         MovieResponse movieResponse = MovieResponse.builder()
             .id(movie.getId())
             .title(movie.getTitle())
-            .description(movie.getDescription())
-            .genre(movie.getGenre())
+            .synopsis(movie.getSynopsis())
             .rating(movie.getRating())
             .build();
         Page<Movie> moviePage = new PageImpl<>(List.of(movie), request, 1L);
@@ -179,10 +175,9 @@ class MovieServiceTest {
         Movie movie = Movie.builder()
             .id(id)
             .title("Blade runner 2047")
-            .description("Worthy sequel from the awesome 1982 film")
+            .synopsis("Worthy sequel from the awesome 1982 film")
             .releaseDate(LocalDate.now())
             .rating(4.5D)
-            .genre("sci-fi")
             .votes(1000L)
             .build();
 
@@ -203,8 +198,7 @@ class MovieServiceTest {
         // Then
         assertThat(result.id()).isEqualTo(id);
         spy(movie).setTitle(anyString());
-        spy(movie).setDescription(anyString());
-        spy(movie).setGenre(anyString());
+        spy(movie).setSynopsis(anyString());
         spy(movie).setReleaseDate(any(LocalDate.class));
         verify(movieRepository).save(any(Movie.class));
         verify(movieMapper).mapMovieToMovieResponse(movie);

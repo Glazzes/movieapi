@@ -15,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -28,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DisplayName("Movie Controller Integration Tests")
 public class MovieControllerTest {
@@ -45,8 +43,7 @@ public class MovieControllerTest {
         Movie movie = Movie.builder()
             .id(null)
             .title("Blade runner 2047")
-            .description("Great sequel of the original 1982 film")
-            .genre("sci-fi")
+            .synopsis("Great sequel of the original 1982 film")
             .releaseDate(LocalDate.of(2017, 10, 3))
             .votes(0L)
             .rating(0D)
@@ -61,11 +58,10 @@ public class MovieControllerTest {
         validRequest = new CreateMovieRequest(
             "Blade runner 2047",
             "Great sequel of the original 1982 film",
-            "sci-fi",
             LocalDate.of(2017, 10, 3)
         );
 
-        invalidRequest = new CreateMovieRequest("", "", "", null);
+        invalidRequest = new CreateMovieRequest("", "", null);
     }
 
     @AfterEach
@@ -104,7 +100,7 @@ public class MovieControllerTest {
             .andExpectAll(
                 jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()),
                 jsonPath("$.instance").value(BASE_ENDPOINT),
-                jsonPath("$.errors.*", hasSize(4))
+                jsonPath("$.errors.*", hasSize(3))
             );
     }
 
@@ -174,7 +170,7 @@ public class MovieControllerTest {
             .andExpectAll(
                 jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()),
                 jsonPath("$.instance").value(url),
-                jsonPath("$.errors.*", hasSize(4))
+                jsonPath("$.errors.*", hasSize(3))
             );
     }
 
@@ -190,8 +186,7 @@ public class MovieControllerTest {
             .andExpectAll(
                 jsonPath("$.id").isNumber(),
                 jsonPath("$.title").value(validRequest.title()),
-                jsonPath("$.description").value(validRequest.description()),
-                jsonPath("$.genre").value(validRequest.genre()),
+                jsonPath("$.synopsis").value(validRequest.synopsis()),
                 jsonPath("$.releaseDate").value(validRequest.releaseDate().toString()),
                 jsonPath("$.rating").isNumber()
             );
