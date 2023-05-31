@@ -22,11 +22,11 @@ services:
       - POSTGRES_USER=glaze
       - POSTGRES_PASSWORD=dalmatian
       - POSTGRES_DB=movie
-    restart: always
+    restart: unless-stopped
 
   redis-cache:
     image: redis:7.0-alpine
     container_name: redis-cache
     ports:
       - "6379:6379"
-    restart: always
+    restart: unless-stopped
