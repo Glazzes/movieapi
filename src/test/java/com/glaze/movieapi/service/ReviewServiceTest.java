@@ -45,8 +45,7 @@ public class ReviewServiceTest {
     private final Movie movieEntity = Movie.builder()
         .id(1L)
         .title("Blade Runner 2047")
-        .description("Great sequel to the 1983 film")
-        .genre("sci-fi")
+        .synopsis("Great sequel to the 1983 film")
         .votes(200L)
         .rating(4.5D)
         .createdAt(LocalDate.now())
@@ -149,7 +148,6 @@ public class ReviewServiceTest {
             movieId,
             "Blade Runner 2047",
             "Great sequel to the 1983 film",
-            "sci-fi",
             100L,
             4.8D,
             LocalDate.now(),

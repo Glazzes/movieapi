@@ -10,6 +10,13 @@ plugins {
 group = "com.glaze"
 version = "0.0.1-SNAPSHOT"
 
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+		vendor.set(JvmVendorSpec.AMAZON)
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom(configurations.annotationProcessor.get())
@@ -25,25 +32,22 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
+	// implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
+	implementation("org.flywaydb:flyway-core")
+	runtimeOnly("org.postgresql:postgresql")
 
 	annotationProcessor("org.projectlombok:lombok")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
 	implementation(libs.mapstruct)
 	annotationProcessor(libs.mapstruct.processor)
 	testAnnotationProcessor(libs.mapstruct.processor)
 
-	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("com.h2database:h2")
-}
-
-java {
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
-		vendor.set(JvmVendorSpec.AMAZON)
-	}
+	testImplementation("org.testcontainers:junit-jupiter:1.18.2")
+	testImplementation("org.testcontainers:postgresql:1.18.2")
+	testImplementation("org.testcontainers:testcontainers:1.18.2")
 }
 
 pmd {

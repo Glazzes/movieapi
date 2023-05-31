@@ -31,13 +31,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Review implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "content", nullable = false, columnDefinition = "text")
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "rating", columnDefinition = "float(1) not null")
+    @Column(name = "rating", nullable = false)
     private Double rating;
 
     @CreatedDate
@@ -49,7 +49,7 @@ public class Review implements Serializable {
     private LocalDate lastModified;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_fk", referencedColumnName = "id")
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movie;
 
 }

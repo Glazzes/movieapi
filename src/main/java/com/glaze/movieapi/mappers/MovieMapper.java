@@ -14,8 +14,7 @@ public interface MovieMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @Mapping(source = "title", target = "title")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "genre", target = "genre")
+    @Mapping(source = "synopsis", target = "synopsis")
     @Mapping(source = "releaseDate", target = "releaseDate")
     @Mapping(target = "votes", constant = "0L")
     @Mapping(target = "rating", constant = "0D")
@@ -23,8 +22,7 @@ public interface MovieMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "title", target = "title")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "genre", target = "genre")
+    @Mapping(source = "synopsis", target = "synopsis")
     @Mapping(source = "rating", target = "rating")
     @Mapping(source = "releaseDate", target = "releaseDate", dateFormat = "dd MMM, yyyy")
     MovieResponse mapMovieToMovieResponse(Movie movie);
