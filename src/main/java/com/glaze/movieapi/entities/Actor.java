@@ -31,10 +31,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Actor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "summary", nullable = false)

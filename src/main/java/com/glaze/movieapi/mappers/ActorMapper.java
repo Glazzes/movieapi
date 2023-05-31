@@ -12,6 +12,7 @@ public interface ActorMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "movies", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "name", target = "name")
     @Mapping(source = "summary", target = "summary")
     @Mapping(source = "birthDate", target = "birthDate")

@@ -9,8 +9,7 @@ import lombok.Builder;
 public record MovieResponse(
     Long id,
     String title,
-    String description,
+    String synopsis,
     Double rating,
-    String genre,
     LocalDate releaseDate
 ) implements Serializable {}

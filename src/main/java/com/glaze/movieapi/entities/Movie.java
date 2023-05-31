@@ -33,17 +33,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", nullable = false)
-    private String description;
-
-    @Column(name = "genre", nullable = false)
-    private String genre;
+    @Column(name = "synopsis", nullable = false)
+    private String synopsis;
 
     @Column(name = "votes", nullable = false)
     private Long votes;
@@ -52,7 +49,7 @@ public class Movie {
     private Double rating;
 
     @CreatedDate
-    @Column(name = "createAt", nullable = false, updatable = false)
+    @Column(name = "createdAt", nullable = false, updatable = false)
     private LocalDate createdAt;
 
     @Column(name = "release_date", nullable = false)

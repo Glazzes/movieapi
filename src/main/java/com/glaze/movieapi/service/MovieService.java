@@ -52,8 +52,7 @@ public class MovieService {
             .orElseThrow(() -> new NotFoundException(MOVIE_NOT_FOUND, id));
 
         movie.setTitle(request.title());
-        movie.setDescription(request.description());
-        movie.setGenre(request.genre());
+        movie.setSynopsis(request.synopsis());
         movie.setReleaseDate(request.releaseDate());
 
         Movie saved = movieRepository.save(movie);
